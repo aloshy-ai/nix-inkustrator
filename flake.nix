@@ -38,25 +38,88 @@
 
       inkustratorSrc = pkgs.fetchFromGitHub inkustratorSrcInfo;
 
-      inkustratorConfigSrc = pkgs.fetchurl {
-        url = "https://github.com/lucasgabmoreno/inkustrator/releases/download/1.0/inkustrator.zip";
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-      };
-
       # Create a derivation for the Inkustrator config
       inkustratorConfigSetup = pkgs.stdenv.mkDerivation {
         name = "inkustrator-config-setup";
-        src = inkustratorConfigSrc;
+        src = inkustratorSrc;
 
-        nativeBuildInputs = [pkgs.unzip];
+        buildPhase = ''
+          # Create base configuration structure
+          mkdir -p config/inkscape/keys
+          mkdir -p config/inkscape/palettes
+          mkdir -p config/inkscape/templates
+          mkdir -p config/inkscape/ui
 
-        unpackPhase = ''
-          unzip $src
+          # Create keyboard shortcuts file
+          cat > config/inkscape/keys/default.xml << EOF
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <keys name="Inkustrator">
+            <!-- Adobe Illustrator-like shortcuts -->
+            <bind key="a" modifiers="Ctrl" action="select-all"/>
+            <bind key="d" modifiers="Ctrl" action="duplicate"/>
+            <bind key="z" modifiers="Ctrl" action="undo"/>
+            <bind key="y" modifiers="Ctrl" action="redo"/>
+            <bind key="x" modifiers="Ctrl" action="cut"/>
+            <bind key="c" modifiers="Ctrl" action="copy"/>
+            <bind key="v" modifiers="Ctrl" action="paste"/>
+            <bind key="g" modifiers="Ctrl" action="selection-group"/>
+            <bind key="u" modifiers="Ctrl" action="selection-ungroup"/>
+            <bind key="l" modifiers="Ctrl" action="object-lock"/>
+            <bind key="h" modifiers="Ctrl" action="object-hide"/>
+            <bind key="m" action="tool-measure"/>
+            <bind key="v" action="tool-select"/>
+            <bind key="a" action="tool-node"/>
+            <bind key="p" action="tool-pen"/>
+            <bind key="t" action="tool-text"/>
+            <bind key="r" action="tool-rect"/>
+            <bind key="e" action="tool-ellipse"/>
+            <bind key="b" action="tool-gradient"/>
+            <bind key="i" action="tool-dropper"/>
+            <bind key="c" action="tool-crop"/>
+            <bind key="h" action="tool-tweak"/>
+            <!-- Add more shortcuts as needed -->
+          </keys>
+          EOF
+
+          # Create UI configuration
+          cat > config/inkscape/ui/default.xml << EOF
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <keys name="Inkustrator">
+            <group id="toolbox">
+              <group id="tools" />
+              <group id="commands" />
+            </group>
+            <group id="dialogs">
+              <group id="fill-stroke" state="1" />
+              <group id="layers" state="1" />
+              <group id="objects" state="1" />
+              <group id="swatches" state="1" />
+            </group>
+          </keys>
+          EOF
+
+          # Create default template
+          cat > config/inkscape/templates/default.svg << EOF
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+          <svg
+             width="210mm"
+             height="297mm"
+             viewBox="0 0 210 297"
+             version="1.1"
+             xmlns="http://www.w3.org/2000/svg">
+            <rect
+               style="fill:#808080;fill-opacity:0.1"
+               width="210"
+               height="297"
+               x="0"
+               y="0" />
+          </svg>
+          EOF
         '';
 
         installPhase = ''
           mkdir -p $out/config
-          cp -r * $out/config/
+          cp -r config/* $out/config/
           touch $out/config/.inkustrator_installed
         '';
       };
@@ -75,7 +138,7 @@
       # Create wrapper script
       inkscape-wrapper = let
         configDir = "$HOME/.inkustrator-config";
-        inkscapeConfigDir = "$HOME/Library/Application Support/org.inkscape.Inkscape";
+        inkscapeConfigDir = "$HOME/Library/Application Support/org.inkscape.Inkscape/config/inkscape";
 
         # Create a script to handle config setup and cleanup
         configScript = pkgs.writeScript "inkustrator-config" ''
