@@ -38,14 +38,25 @@
 
       inkustratorSrc = pkgs.fetchFromGitHub inkustratorSrcInfo;
 
+      inkustratorConfigSrc = pkgs.fetchurl {
+        url = "https://github.com/lucasgabmoreno/inkustrator/releases/download/1.0/inkustrator.zip";
+        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      };
+
       # Create a derivation for the Inkustrator config
       inkustratorConfigSetup = pkgs.stdenv.mkDerivation {
         name = "inkustrator-config-setup";
-        src = inkustratorSrc;
+        src = inkustratorConfigSrc;
+
+        nativeBuildInputs = [pkgs.unzip];
+
+        unpackPhase = ''
+          unzip $src
+        '';
 
         installPhase = ''
           mkdir -p $out/config
-          cp -r $src/config/* $out/config/
+          cp -r * $out/config/
           touch $out/config/.inkustrator_installed
         '';
       };
