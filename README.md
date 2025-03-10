@@ -1,5 +1,11 @@
 # nix-inkustrator
 
+[![](https://img.shields.io/badge/aloshy.🅰🅸-000000.svg?style=for-the-badge)](https://aloshy.ai)
+[![Powered By Nix](https://img.shields.io/badge/NIX-POWERED-5277C3.svg?style=for-the-badge&logo=nixos)](https://nixos.org)
+[![Platform](https://img.shields.io/badge/MACOS-ONLY-000000.svg?style=for-the-badge&logo=apple)](https://github.com/aloshy-ai/nix-inkustrator)
+[![Build Status](https://img.shields.io/badge/BUILD-PASSING-success.svg?style=for-the-badge&logo=github)](https://github.com/aloshy-ai/nix-inkustrator/actions)
+[![License](https://img.shields.io/badge/LICENSE-GPL3-yellow.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 A Nix package that provides Inkustrator customizations for Inkscape on macOS, making it more familiar to Adobe Illustrator users.
 
 ## Features
