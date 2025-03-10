@@ -33,7 +33,7 @@
         owner = "lucasgabmoreno";
         repo = "inkustrator";
         rev = "main";
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+        sha256 = "sha256-mk0hH8cB7Pxj/eqfJld8RMAB1PJqdFi3x+/tI7bzEeo=";
       };
 
       inkustratorSrc = pkgs.fetchFromGitHub inkustratorSrcInfo;
