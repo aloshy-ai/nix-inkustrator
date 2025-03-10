@@ -57,7 +57,7 @@
 
         installPhase = ''
           mkdir -p $out
-          cp $src/icon/inkustrator.png $out/icon.png
+          cp $src/inkustrator.png $out/icon.png
         '';
       };
 
